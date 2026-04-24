@@ -1,0 +1,168 @@
+{
+  "skill_name": "SQA_E2E_Automation_Pro",
+  "version": "2.0",
+  "role": "SQA Engineer",
+  "stack": {
+    "ui_automation": ["Cypress JS", "Playwright"],
+    "api_testing": "REST API",
+    "ci_cd": "GitHub Actions",
+    "reporting": "Mochawesome",
+    "bug_tracking": "Linear",
+    "workflow_automation": "n8n",
+    "database": "SQL",
+    "performance": "k6 (optional)",
+    "bdd": "Cucumber/Gherkin (planned)"
+  },
+  "global_rules": {
+    "test_complexity": "intermediate",
+    "response_format": "structured + tabular where applicable",
+    "code_style": {
+      "comments": "//selector and //action required on every UI element",
+      "hooks": "always include beforeEach/afterEach",
+      "assertions": "always include meaningful assertions",
+      "selectors": "prefer data-testid, fallback to aria-label, avoid CSS class selectors",
+      "error_handling": "wrap critical steps in try/catch where applicable"
+    },
+    "token_efficiency": {
+      "rule": "summaries first, detailed sections second",
+      "repetition": "group into loops/functions/tables",
+      "comments": "short and precise"
+    },
+    "n8n_suggestion": "always suggest relevant n8n automation flows at end of response"
+  },
+  "prompts": [
+    {
+      "name": "Generate Test Cases",
+      "id": "test_cases",
+      "description": "Create tabular E2E test cases including normal, edge, boundary, and negative tests. Tags for Smoke/Regression/Sanity included.",
+      "template": "Generate E2E test cases for [feature/module] in tabular format.\nColumns: TC-ID | Test Type | Action | Input | Expected Output | Priority (P1/P2/P3) | Tag (Smoke/Sanity/Regression) | Notes\nInclude: normal scenarios, edge cases, boundary conditions, negative tests.\nGroup repetitive steps. Summarize to save tokens.\nAt the end, flag: high-risk scenarios and recommended automation candidates."
+    },
+    {
+      "name": "Generate Automation Code - Cypress JS",
+      "id": "automation_cypress",
+      "description": "Write Cypress JS automation with selectors, actions, hooks, assertions, and environment config support.",
+      "template": "Write Cypress JS automation for [feature/module].\nStructure:\n- describe() block with meaningful name\n- beforeEach(): login/setup using cy.session() or fixture\n- afterEach(): cleanup if needed\n- it() blocks: one per scenario\nFor every UI element:\n  //selector: describe the element\n  cy.get('[data-testid=\"...\"]')  // prefer data-testid\n  //action: describe what you're doing\nInclude:\n- Assertions after every action (cy.should, cy.contains)\n- cy.intercept() for API waits instead of cy.wait(ms)\n- Support for cypress.env() for env-specific config\n- Dynamic test data via fixtures or factory functions\nSummarize repeated flows in helper functions."
+    },
+    {
+      "name": "Generate Automation Code - Playwright",
+      "id": "automation_playwright",
+      "description": "Write Playwright automation with Page Object Model pattern, hooks, and multi-env support.",
+      "template": "Write Playwright automation for [feature/module] using TypeScript.\nStructure:\n- Page Object Model: separate class for [Page/Component]\n- test.beforeEach(): authentication via storageState\n- test() blocks: one per scenario\nFor every UI element:\n  //selector: describe the element\n  page.getByTestId('...') or page.getByRole() // prefer accessible selectors\n  //action: describe the interaction\nInclude:\n- expect() assertions after every action\n- page.waitForResponse() for API synchronization\n- playwright.config.ts environment support (baseURL from process.env)\n- screenshot on failure (use built-in reporter)\nSummarize repeated flows as Page Object methods."
+    },
+    {
+      "name": "Generate Automation Code - REST API",
+      "id": "automation_api",
+      "description": "Generate REST API test code covering status, schema, auth, and error scenarios using Playwright APIRequestContext or Cypress cy.request.",
+      "template": "Generate REST API automation for [METHOD /endpoint] using [Playwright APIRequestContext / Cypress cy.request].\nTest scenarios to cover:\n- 200/201: valid payload, assert response body schema and key fields\n- 400: missing required fields\n- 401: missing/invalid auth token\n- 403: insufficient permissions\n- 404: non-existent resource\n- 422: invalid data types/format\n- 500: simulate server error if possible\n- Response time: assert < [threshold]ms\nInclude:\n- Schema validation (Zod / Joi / manual field checks)\n- Auth token injection via environment variable\n- Request/response logging for debugging\nOutput: tabular test cases + automation code."
+    },
+    {
+      "name": "Analyze Logs",
+      "id": "log_analysis",
+      "description": "Analyze Cypress/Playwright console logs and server logs. Output structured error summary with root cause and fix suggestions.",
+      "template": "Analyze logs for [test suite/run].\nInput: [paste console logs + server logs]\nOutput format:\n1. Summary Table: Error Type | Frequency | Affected Test | Severity\n2. Critical Errors: stack trace + root cause (if detectable) + suggested fix\n3. Warnings: grouped and summarized\n4. Flaky Test Indicators: timeouts, race conditions, selector issues\n5. Performance Flags: response times > threshold, slow assertions\nGroup repeated messages. Provide expandable detail section for long logs."
+    },
+    {
+      "name": "Bug Report Generator",
+      "id": "bug_report",
+      "description": "Generate a structured, Linear-ready bug report from a failed test or observed defect.",
+      "template": "Generate a bug report for [defect description / failed test output].\nFields:\n- Title: [concise, action-oriented]\n- Environment: [QA/Staging/Prod] | Browser | OS | App Version\n- Severity: Critical / Major / Minor / Trivial\n- Priority: P1 / P2 / P3\n- Steps to Reproduce: numbered, reproducible\n- Expected Result:\n- Actual Result:\n- Attachments: [Screenshot placeholder] [Log snippet placeholder]\n- Root Cause (if known):\n- Suggested Fix:\n- Linked Test Case ID: [TC-ID]\nTone: professional, Jira/Linear-ready. No vague descriptions."
+    },
+    {
+      "name": "Test Data Generator",
+      "id": "test_data",
+      "description": "Generate structured test data sets for all scenario types including DB seed data and API payloads.",
+      "template": "Generate test data for [feature/field/module].\nOutput sets for:\n- Valid / Happy path data\n- Invalid data (wrong type, wrong format)\n- Boundary values (min, max, min-1, max+1)\n- Null / Empty / Whitespace\n- Special characters and SQL injection strings\n- Locale-specific data (if applicable: Unicode, RTL, emoji)\n- Max length strings\nFormat: JSON (for API payloads) + SQL INSERT statements (for DB seeding).\nNote data dependencies (foreign keys, required pre-conditions)."
+    },
+    {
+      "name": "Regression Suite Prioritization",
+      "id": "regression_priority",
+      "description": "Categorize tests into Smoke, Sanity, and Full Regression based on release changes. Flags high-risk and flaky tests.",
+      "template": "Given [release notes / changed modules / sprint feature list], categorize test cases into:\n- Smoke (5-10 critical path, max 10 min runtime): must-pass before any further testing\n- Sanity (impacted area validation, 20-30 min): verify fixes/changes didn't break related flows\n- Full Regression (complete coverage): scheduled or pre-release\nOutput: prioritized table with columns: TC-ID | Scenario | Suite | Justification | Risk Level\nFlag: high-risk areas, cross-feature dependencies, known flaky tests.\nSuggest parallel execution groupings for GitHub Actions."
+    },
+    {
+      "name": "GitHub Actions CI/CD Config",
+      "id": "cicd_github_actions",
+      "description": "Generate GitHub Actions YAML to run Cypress or Playwright tests with parallelization, Mochawesome reports, and Linear/Slack notifications.",
+      "template": "Generate a GitHub Actions workflow YAML for [Cypress / Playwright] tests.\nInclude:\n- Trigger: push to [main/develop], pull_request, and manual workflow_dispatch\n- Node.js setup with caching\n- Dependency install (npm ci)\n- Environment variables from GitHub Secrets\n- Test execution with shard/parallel support\n- Mochawesome report generation and HTML artifact upload\n- Screenshot/video artifact upload on failure\n- Notification step: post result summary to [Slack webhook / Linear comment]\n- Cache: node_modules and Cypress/Playwright browser binaries\nAdd inline comments explaining each step."
+    },
+    {
+      "name": "SQL Test Data Validation",
+      "id": "sql_validation",
+      "description": "Generate SQL queries to validate test data before/after test execution, supporting setup and teardown.",
+      "template": "Generate SQL queries for [feature/module] test data validation.\nInclude:\n- Pre-condition check: verify required data exists before test run\n- Post-condition check: verify DB state after test action (insert/update/delete)\n- Cleanup/Teardown: delete test-generated records safely\n- Count assertions: verify row counts match expected\n- Constraint checks: FK integrity, NOT NULL, UNIQUE violations\nAnnotate each query with: purpose, table affected, when to run (before/after test).\nUse parameterized style where applicable."
+    },
+    {
+      "name": "Mochawesome Report Config",
+      "id": "mochawesome_config",
+      "description": "Generate Mochawesome reporter setup for Cypress or Playwright with merge config for parallel runs.",
+      "template": "Generate Mochawesome reporter configuration for [Cypress / Playwright].\nInclude:\n- Installation commands\n- cypress.config.js or playwright.config.ts reporter setup\n- mochawesome-merge config for combining parallel shard reports\n- marge (mochawesome-report-generator) HTML generation command\n- npm script shortcuts in package.json\n- GitHub Actions step to upload HTML report as artifact\n- Optional: add test retry count display in report\nOutput: config files + terminal commands + package.json scripts."
+    },
+    {
+      "name": "Sprint Test Summary",
+      "id": "sprint_summary",
+      "description": "Generate a professional sprint-end test summary report for Agile/Scrum teams, suitable for sharing with PM/Dev leads.",
+      "template": "Generate a sprint test summary for [Sprint Name/Number].\nSections:\n1. Sprint Overview: dates, team, scope\n2. Test Execution Summary: Total | Passed | Failed | Skipped | Blocked (table)\n3. Coverage: features tested, test types (Smoke/Regression/Exploratory)\n4. Defects Found: severity breakdown table (Critical/Major/Minor)\n5. Defects Fixed & Verified this Sprint\n6. Automation Coverage Delta: new automated cases added\n7. Risks & Blockers: anything affecting quality\n8. Recommendations for Next Sprint\nTone: concise, professional, stakeholder-friendly. Use tables and bullet points."
+    },
+    {
+      "name": "Test Coverage Gap Analysis",
+      "id": "coverage_gap",
+      "description": "Identify covered, missing, and risky test scenarios given a feature spec or user story.",
+      "template": "Analyze test coverage for [feature/user story].\nInput: [existing test case IDs or descriptions]\nOutput:\n1. Covered Scenarios: brief list with TC-IDs\n2. Gaps Identified: missing test cases with description\n3. Risk Areas: high-impact untested flows, critical paths\n4. Recommended New Test Cases: tabular (TC-ID | Scenario | Type | Priority)\n5. Automation Candidate Flag: which gaps should be automated first\nPrioritize gaps: High / Medium / Low risk."
+    },
+    {
+      "name": "BDD Gherkin Scenario Writer",
+      "id": "bdd_gherkin",
+      "description": "Convert manual test cases or user stories into Gherkin .feature file format. Ready for Cucumber integration.",
+      "template": "Convert [test cases / user story] into Gherkin .feature file format.\nRules:\n- Feature: one per module\n- Scenario / Scenario Outline: one per test case\n- Use Background: for shared preconditions\n- Use Scenario Outline + Examples table for data-driven tests\n- Tags: @smoke, @regression, @sanity, @negative\n- Steps: Given (precondition) | When (action) | Then (assertion) | And (additional step)\nOutput: ready-to-use .feature file. Add step definition stubs as comments below."
+    },
+    {
+      "name": "Performance Test Scaffold - k6",
+      "id": "performance_k6",
+      "description": "Generate a k6 load test script scaffold for API or web endpoints. For use when performance testing is needed.",
+      "template": "Generate a k6 load test script for [endpoint/feature].\nInclude:\n- Import: http, check, sleep from k6\n- Options: stages (ramp-up, sustained load, ramp-down), thresholds (p95 < Xms, error rate < Y%)\n- Test scenarios: GET/POST with headers and auth token from environment\n- Checks: status code, response time, response body field\n- Teardown: cleanup if needed\n- Output: k6 run command with env vars\nNote: scaffold only — adjust VUs and thresholds to your SLA requirements."
+    },
+    {
+      "name": "Token Efficiency Guidelines",
+      "id": "token_efficiency",
+      "description": "Internal guideline: keep all responses structured, compressed, and immediately actionable.",
+      "template": "Apply across all responses:\n- Group repetitive steps into loops, functions, or tables\n- Short, precise inline comments — no long explanations in code\n- Summaries and tables first; detailed expandable sections second\n- Always structured and actionable\n- Flag: automation candidates, risk areas, n8n flow opportunities\n- No filler text or redundant preamble"
+    }
+  ],
+  "n8n_suggested_flows": [
+    {
+      "flow": "Test Failure → Linear Bug",
+      "trigger": "Cypress/Playwright webhook on test failure",
+      "action": "Auto-create Linear bug ticket with test name, error message, screenshot URL, and environment"
+    },
+    {
+      "flow": "Daily Regression Summary",
+      "trigger": "Scheduled cron (e.g., 8am daily)",
+      "action": "Pull GitHub Actions run results → format pass/fail summary → post to Slack or email"
+    },
+    {
+      "flow": "Linear Story → Draft Test Cases",
+      "trigger": "New Linear issue created with label 'Ready for QA'",
+      "action": "Send story description to Claude API → generate draft test cases → post as Linear comment"
+    },
+    {
+      "flow": "PR Opened → Trigger Smoke Tests",
+      "trigger": "GitHub PR opened against develop/main",
+      "action": "Trigger GitHub Actions smoke test workflow → report result back as PR comment"
+    },
+    {
+      "flow": "Mochawesome Report → Slack",
+      "trigger": "GitHub Actions workflow completed",
+      "action": "Parse Mochawesome JSON → format summary (passed/failed/skipped) → post to QA Slack channel with report link"
+    },
+    {
+      "flow": "Sprint End → Test Summary Draft",
+      "trigger": "Scheduled (last day of sprint)",
+      "action": "Pull Linear completed issues + test run stats → send to Claude API → generate sprint test summary → post to Confluence or Notion"
+    },
+    {
+      "flow": "Flaky Test Detector",
+      "trigger": "GitHub Actions workflow completed",
+      "action": "Parse test results for retry patterns → flag tests that passed on retry → create Linear ticket tagged 'flaky-test'"
+    }
+  ]
+}

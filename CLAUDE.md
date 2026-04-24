@@ -139,3 +139,59 @@ npx cypress open            # interactive
 ## Source reference
 - Old project (Basic Auth, 16 modules): `C:\Users\shahi\Circuly Project\customer-api-e2e`
 - Postman collection: `C:\Users\shahi\Downloads\circuly_customers API (2026-04) (hub).postman_collection.json`
+
+---
+
+## SQA Skill — Active Rules
+
+> Skill file: `.claude/skills/SQA_E2E_Automation_Pro.json` (v2.0)
+> These rules apply to ALL responses in this project.
+
+### Code Style
+| Rule | Standard |
+|---|---|
+| Complexity | Intermediate |
+| Hooks | Always include `beforeEach` / `afterEach` |
+| Assertions | Meaningful assertions after every action |
+| Selectors | Prefer `data-testid` → `aria-label` → avoid CSS class |
+| Error handling | Wrap critical steps in `try/catch` where applicable |
+| Comments | `// selector: …` and `// action: …` on every UI element |
+
+### Token Efficiency
+- Summaries and tables **first**, detailed sections second
+- Group repetitive steps into loops / functions / tables
+- Short, precise inline comments — no long explanations in code
+- Always structured and immediately actionable
+
+### Test Cases Format
+Columns: `TC-ID | Test Type | Action | Input | Expected Output | Priority (P1/P2/P3) | Tag (Smoke/Sanity/Regression) | Notes`
+Always include: normal, edge, boundary, negative scenarios. Flag high-risk and automation candidates.
+
+### Available Skill Prompts
+| ID | Purpose |
+|---|---|
+| `test_cases` | Generate tabular E2E test cases |
+| `automation_cypress` | Cypress JS automation code |
+| `automation_playwright` | Playwright + POM TypeScript |
+| `automation_api` | REST API test code (cy.request / APIRequestContext) |
+| `log_analysis` | Analyze Cypress/Playwright logs |
+| `bug_report` | Linear-ready structured bug report |
+| `test_data` | JSON payloads + SQL seed data |
+| `regression_priority` | Smoke / Sanity / Full Regression categorization |
+| `cicd_github_actions` | GitHub Actions YAML with Mochawesome + Slack |
+| `sql_validation` | Pre/post condition SQL queries |
+| `mochawesome_config` | Reporter setup + merge config |
+| `sprint_summary` | Sprint-end QA summary report |
+| `coverage_gap` | Test coverage gap analysis |
+| `bdd_gherkin` | Gherkin `.feature` file from test cases |
+| `performance_k6` | k6 load test scaffold |
+
+### n8n Automation Suggestions
+Always flag relevant n8n flows at the end of responses:
+- **Test Failure → Linear Bug** — auto-create ticket on test failure
+- **Daily Regression Summary** — cron → GitHub Actions results → Slack
+- **Linear Story → Draft Test Cases** — 'Ready for QA' label → Claude → Linear comment
+- **PR Opened → Smoke Tests** — GitHub PR → trigger workflow → PR comment
+- **Mochawesome → Slack** — parse JSON → post summary to QA channel
+- **Sprint End → Test Summary** — Linear issues + stats → Claude → Confluence
+- **Flaky Test Detector** — retry pattern detection → Linear 'flaky-test' ticket
