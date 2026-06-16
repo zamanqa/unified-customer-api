@@ -27,9 +27,10 @@ export function getUnpaidInvoiceQuery(companyId) {
     FROM transactions t
     LEFT JOIN invoices i ON i.transaction_id = t.transaction_id AND i.company_id = t.company_id
     WHERE t.company_id IN ('${companyId}')
-      AND t.transaction_id ILIKE '%TR_%'
       AND t.status NOT IN ('succeeded', 'in debt collection')
       AND i.paid = false
+      AND t.transaction_id ILIKE '%TR_%'
+      AND i.cancellation_count IN (0)
     ORDER BY t.created_at DESC
     LIMIT 1
   `;
@@ -37,7 +38,7 @@ export function getUnpaidInvoiceQuery(companyId) {
 
 export function getRefundableInvoiceQuery(companyId) {
   return `
-    SELECT t.invoice_number, t.transaction_id
+    SELECT i.id as invoice_id, t.order_id as order_id, t.invoice_number, t.transaction_id
     FROM transactions t
     LEFT JOIN invoices i
       ON i.transaction_id = t.transaction_id

@@ -1,6 +1,6 @@
 import { circulydbRequest } from '../_shared/apiClient';
 
-// Access Keys URL: {{base_url}}/{{api_version}}/{{company_id}}/circulydb/{resource}
+// Access Keys URL: {{base_url}}/{{api_version}}/{{company_id}}/{resource}
 export function getAllAccessKeys() {
   return circulydbRequest('GET', '/keys');
 }

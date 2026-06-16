@@ -5,8 +5,8 @@
  * Heroku dynos and other cold-start servers before tests begin.
  */
 
-const HUB_API_URL    = 'https://circuly-lumen.herokuapp.com';
-const CHECKOUT_API_URL = 'https://checkout-api-development-680576524870.europe-west3.run.app/v1/version';
+const HUB_API_URL    = 'https://hub.api.development.circuly.io';
+const CHECKOUT_API_URL = 'https://hz-dev.checkout-api.circuly.org/v1/version';
 const VALID_STATUSES = [200, 301, 302];
 const RETRY_WAIT_MS  = 15000;
 

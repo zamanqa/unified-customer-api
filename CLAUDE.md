@@ -25,7 +25,7 @@ Token is cached — re-login only happens when JWT `exp` is past.
 
 | Module type | URL format | Helper |
 |---|---|---|
-| Most endpoints | `{base}/{version}/{companyId}/circulydb/{resource}` | `circulydbRequest` |
+| Most endpoints | `{base}/{version}/{companyId}/{resource}` | `circulydbRequest` |
 | CSS / Deliveries | `{base}/{version}/{companyId}/css/{resource}` | `cssRequest` |
 | Debt collection | `{base}/{version}/{companyId}/debtist/{resource}` | `debtistRequest` |
 
@@ -117,7 +117,7 @@ CSS endpoints follow pattern: `{base}/{version}/css/{resource}` — no `companyI
 
 ### Access keys endpoints
 Use `circulydbRequest` — map to `/keys`, `/assign`, `/keys/{id}`.
-Old Postman had `{{customers_lumen_url}}/{{company_id}}/keys` → now `/circulydb/keys`.
+Old Postman had `{{customers_lumen_url}}/{{company_id}}/keys` → now `/{companyId}/keys`.
 
 ### CSV/export endpoints
 Use `circulydbRequest` — map to `/CSV` (POST with `type` body), `/export`, `/exports/{id}`.

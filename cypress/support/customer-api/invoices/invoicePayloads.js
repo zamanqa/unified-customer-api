@@ -1,12 +1,21 @@
 // Request payloads for Invoices module
 
-export function getRefundPayload() {
+export function getRefundPayload(invoiceId, orderId) {
   return {
-    amount: 0.50,
+    amount: 0.1,
     cumulated_items: [],
-    full_refund: true,
+    full_refund: false,
+    invoice_id: String(invoiceId),
     items: [],
     message: "",
-    products: []
+    order_id: String(orderId),
+    products: [
+      {
+        amount: 0.1,
+        product: "Test",
+        quantity: 1,
+        tax_percent: 0
+      }
+    ]
   };
 }

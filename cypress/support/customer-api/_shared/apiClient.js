@@ -6,7 +6,7 @@
  * On expiry, login is called automatically before the next request.
  *
  * URL patterns:
- *   circulydb  → {baseUrl}/{apiVersion}/{companyId}/circulydb{endpoint}
+ *   circulydb  → {baseUrl}/{apiVersion}/{companyId}{endpoint}
  *   css        → {baseUrl}/{apiVersion}{endpoint}  (endpoint starts with /css/)
  *   debtist    → {baseUrl}/{apiVersion}/{companyId}{endpoint}  (endpoint starts with /debtist/)
  */
@@ -82,15 +82,15 @@ function bearerHeaders(token, extra = {}) {
 }
 
 /**
- * Request helper for /circulydb/ endpoints (the majority).
- * URL: {baseUrl}/{apiVersion}/{companyId}/circulydb{endpoint}
+ * Request helper for circulydb endpoints (the majority).
+ * URL: {baseUrl}/{apiVersion}/{companyId}{endpoint}
  */
 export function circulydbRequest(method, endpoint, options = {}) {
   return ensureAuthenticated().then((token) => {
     const { headers: extraHeaders, ...rest } = options;
     return cy.request({
       method,
-      url: `${getBaseUrl()}/${getApiVersion()}/${getCompanyId()}/circulydb${endpoint}`,
+      url: `${getBaseUrl()}/${getApiVersion()}/${getCompanyId()}${endpoint}`,
       headers: bearerHeaders(token, extraHeaders),
       ...rest,
     });

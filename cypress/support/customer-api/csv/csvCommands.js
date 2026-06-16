@@ -1,6 +1,6 @@
 import { circulydbRequest } from '../_shared/apiClient';
 
-// CSV/Export URL: {{base_url}}/{{api_version}}/{{company_id}}/circulydb/{resource}
+// CSV/Export URL: {{base_url}}/{{api_version}}/{{company_id}}/{resource}
 export function exportCustomers() {
   return circulydbRequest('POST', '/CSV', { body: { type: 'customers' } });
 }

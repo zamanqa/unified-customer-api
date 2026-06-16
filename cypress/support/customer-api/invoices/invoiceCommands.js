@@ -29,10 +29,10 @@ export function settleInvoice(invoiceNumber) {
   return circulydbRequest('POST', `/invoices/${invoiceNumber}/settle`);
 }
 
-// POST /invoices/{invoice_number}/refund
-export function refundInvoice(invoiceNumber) {
-  return circulydbRequest('POST', `/invoices/${invoiceNumber}/refund`, {
-    body: getRefundPayload()
+// POST /invoices/{invoice_id}/refund
+export function refundInvoice(invoiceId, orderId) {
+  return circulydbRequest('POST', `/invoices/${invoiceId}/refund`, {
+    body: getRefundPayload(invoiceId, orderId)
   });
 }
 

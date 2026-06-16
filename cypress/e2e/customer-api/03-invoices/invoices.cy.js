@@ -56,14 +56,15 @@ describe('Customer Invoices API', () => {
         return;
       }
 
-      const invoiceNumber = result[0].invoice_number;
+      const invoiceId = result[0].invoice_id;
+      const orderId = result[0].order_id;
       const transactionId = result[0].transaction_id;
-      cy.log('Eligible invoice found:', invoiceNumber);
+      cy.log('Eligible invoice found:', invoiceId);
 
-      invoices.refundInvoice(invoiceNumber).then((response) => {
+      invoices.refundInvoice(invoiceId, orderId).then((response) => {
         expect(response.status).to.eq(200);
-        expect(response.body).to.have.property('message', 'Refund Payment Success');
-        cy.log('Invoice refunded:', invoiceNumber);
+        expect(response.body).to.eq('Refund Payment Success');
+        cy.log('Invoice refunded:', invoiceId);
 
         invoices.verifyRefundInDB(transactionId);
       });
